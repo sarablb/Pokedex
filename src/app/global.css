@@ -1,0 +1,16 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-manrope), sans-serif;
+  background-color: #FFFFFF;
+  color: #060606;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
