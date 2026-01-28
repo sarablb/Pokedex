@@ -1,7 +1,5 @@
 import { getPokemonSpecies } from "@/lib/api";
-import { PokemonSpecies } from "@/lib/types";
-import Link from "next/link";
-import PokemonDetail from "./PokemonDetail";
+import PokemonPageClient from "@/components/PokemonPageClient";
 
 interface PageProps {
   params: Promise<{ name?: string }>;
@@ -10,25 +8,13 @@ interface PageProps {
 export default async function PokemonPage({ params }: PageProps) {
   const { name } = await params;
 
-  if (!name) {
-    return <div>Pokemon not found: missing name parameter</div>;
-  }
+  if (!name) return <div>Name not provided</div>;
 
   try {
-    const pokemon: PokemonSpecies = await getPokemonSpecies(name);
+    const pokemon = await getPokemonSpecies(name);
 
-    return (
-      <div style={{ padding: "16px" }}>
-        {/* Pulsante Back */}
-        <Link href="/" style={{ display: "inline-block", marginBottom: "16px" }}>
-          ← Back to list
-        </Link>
-
-        {/* Dettagli Pokémon */}
-        <PokemonDetail pokemon={pokemon} />
-      </div>
-    );
+    return <PokemonPageClient pokemon={pokemon} />;
   } catch (err) {
-    return <div>Pokemon not found: {name}</div>;
+    return <div>Error loading Pokemon: {name}</div>;
   }
 }

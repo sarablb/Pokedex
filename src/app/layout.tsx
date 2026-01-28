@@ -1,25 +1,24 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
-import "./globals.css";
+import { Providers } from "@/lib/providers";
 
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
-  weight: ["400","500","600","700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Pokedex",
-  description: "A fast static Pokedex website with React + Next.js",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${manrope.className}`}>
-        {children}
+      <body className={`${manrope.variable}`}>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

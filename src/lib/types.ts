@@ -11,7 +11,6 @@ export interface PokemonListResponse {
   results: PokemonListResult[];
 }
 
-// Tipi completi per un singolo Pokémon
 export interface PokemonSpecies {
   id: number;
   name: string;
@@ -20,8 +19,7 @@ export interface PokemonSpecies {
   flavor_text: string;
 }
 
-// Oggetto tipo in PokeAPI
 export interface PokemonTypeSlot {
   slot: number;
-  type: { name: string }; // tipo es: { name: "grass" }
+  type: { name: string };
 }

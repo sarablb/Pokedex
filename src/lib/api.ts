@@ -1,37 +1,44 @@
-// 🔹 URL base corretto PokeAPI
-export const BASE_URL = "https://pokeapi.co/api/v2";
+const BASE_URL = "https://pokeapi.co/api/v2";
 
-// 1️⃣ Lista Pokémon
 export async function getPokemonList(limit = 151) {
-  const res = await fetch(`${BASE_URL}/pokemon?limit=${limit}`);
-  if (!res.ok) throw new Error("Failed to fetch pokemon list");
-  return res.json();
+  try {
+    const res = await fetch(`${BASE_URL}/pokemon?limit=${limit}`);
+    if (!res.ok) throw new Error("Failed to fetch pokemon list");
+    return res.json();
+  } catch (error) {
+    console.error("Errore lista:", error);
+    return { results: [] };
+  }
 }
 
-// 2️⃣ Dati completi Pokémon
 export async function getPokemonSpecies(name: string) {
-  if (!name) throw new Error("Missing name parameter");
+  if (!name) return null;
 
-  const lowercaseName = name.toLowerCase();
+  const lowercaseName = name.toLowerCase().trim();
 
-  const pokemonRes = await fetch(`${BASE_URL}/pokemon/${lowercaseName}`);
-  if (!pokemonRes.ok) throw new Error("Failed to fetch pokemon");
+  try {
+    const [pokemonRes, speciesRes] = await Promise.all([
+      fetch(`${BASE_URL}/pokemon/${lowercaseName}`),
+      fetch(`${BASE_URL}/pokemon-species/${lowercaseName}`)
+    ]);
 
-  const pokemonData = await pokemonRes.json();
+    if (!pokemonRes.ok || !speciesRes.ok) return null;
 
-  // fetch specie per flavor_text e genus
-  const speciesRes = await fetch(`${BASE_URL}/pokemon-species/${lowercaseName}`);
-  if (!speciesRes.ok) throw new Error("Failed to fetch pokemon species");
+    const [pokemonData, speciesData] = await Promise.all([
+      pokemonRes.json(),
+      speciesRes.json()
+    ]);
 
-  const speciesData = await speciesRes.json();
-
-  const types = pokemonData.types;
-
-  return {
-    id: pokemonData.id,
-    name: pokemonData.name,
-    types,
-    genus: speciesData.genera.find((g: any) => g.language.name === "en")?.genus ?? "",
-    flavor_text: speciesData.flavor_text_entries.find((f: any) => f.language.name === "en")?.flavor_text ?? "",
-  };
+    return {
+      id: pokemonData.id,
+      name: pokemonData.name,
+      types: pokemonData.types,
+      genus: speciesData.genera.find((g: any) => g.language.name === "en")?.genus ?? "",
+      flavor_text: speciesData.flavor_text_entries
+        .find((f: any) => f.language.name === "en")
+        ?.flavor_text.replace(/\f/g, " ") ?? "",
+    };
+  } catch (error) {
+    return null;
+  }
 }
