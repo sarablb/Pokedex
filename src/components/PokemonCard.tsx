@@ -3,7 +3,8 @@
 import styled from "styled-components";
 import { TYPE_COLORS } from "@/lib/colors";
 import { getContrastColor } from "@/lib/utils"; 
-
+import { motion } from "framer-motion"; 
+import Image from "next/image";
 
 interface PokemonCardProps {
   name: string;
@@ -13,8 +14,7 @@ interface PokemonCardProps {
   listView?: boolean; 
 }
 
-
-const CardContainer = styled.div<{ $isList: boolean }>`
+const CardContainer = styled(motion.div)<{ $isList: boolean }>`
   display: flex;
   flex-direction: ${props => (props.$isList ? "row" : "column")};
   align-items: top;
@@ -23,35 +23,29 @@ const CardContainer = styled.div<{ $isList: boolean }>`
   background-color: ${props => props.theme.colors.white || "#ffffff"};
   border-radius: 12px;
   border: 1px solid ${props => props.theme.colors.charcoal5};
-  transition: all 0.2s ease-in-out;
   cursor: pointer;
-
-  &:hover {
-    background-color: ${props => props.theme.colors.charcoal5};
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
-  }
+  overflow: hidden;
+  position: relative;
 `;
 
 const ImageWrapper = styled.div<{ $isList: boolean }>`
-  width: ${props => (props.$isList ? "150px" : "100%")};
-  height: auto;
-  padding:20px;
+  width: ${props => (props.$isList ? "120px" : "100%")};
+  aspect-ratio: 1;
+  padding: 20px;
   background-color: ${props => props.theme.colors.charcoal5};
-`;
-
-const PokemonImage = styled.img<{ $isList: boolean }>`
-  object-fit: contain;
-  width: 100%;
-  height: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
 `;
 
 const InfoWrapper = styled.div<{ $isList: boolean }>`
   display: flex;
-  gap:4px;
+  gap: 4px;
   flex-direction: column;
-  text-align: ${props => (props.$isList ? "left" : "start")};
-  align-items: ${props => (props.$isList ? "flex-start" : "start")};
+  text-align: left;
+  align-items: flex-start;
   width: 100%;
 `;
 
@@ -72,7 +66,7 @@ const PokemonName = styled.h2`
 const BadgeGroup = styled.div<{ $isList: boolean }>`
   display: flex;
   gap: 6px;
-  justify-content: ${props => (props.$isList ? "flex-start" : "center")};
+  margin-top: 4px;
 `;
 
 const TypeBadge = styled.span<{ $bgColor: string }>`
@@ -87,15 +81,30 @@ const TypeBadge = styled.span<{ $bgColor: string }>`
 
 export default function PokemonCard({ name, id, image, types, listView = false }: PokemonCardProps) {
   return (
-    <CardContainer $isList={listView}>
+    <CardContainer 
+      $isList={listView}
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ 
+        scale: 1.03, 
+        boxShadow: "0 10px 20px rgba(0,0,0,0.08)",
+        backgroundColor: "#f9f9f9" 
+      }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.3 }}
+    >
       <ImageWrapper $isList={listView}>
-        <PokemonImage 
+        <Image 
           src={image} 
-          alt={`${name} standing`} 
-          $isList={listView} 
-          loading="lazy"
+          alt={name}
+          width={listView ? 80 : 150}
+          height={listView ? 80 : 150}
+          style={{ objectFit: 'contain' }}
+          priority={id <= 10} 
         />
       </ImageWrapper>
+
       <InfoWrapper $isList={listView}>
         <PokemonId>#{String(id).padStart(3, '0')}</PokemonId>
         <PokemonName>{name}</PokemonName>
