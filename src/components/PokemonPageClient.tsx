@@ -3,11 +3,18 @@ import styled from "styled-components";
 import Link from "next/link";
 import PokemonDetail from "./PokemonDetail";
 import { useLanguage } from "@/context/LanguageContext";
+import { PokemonSpecies } from "@/lib/types";
 
 const PageContainer = styled.main`
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
+`;
+
+const PageHeader = styled.header`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 `;
 
 const BackLink = styled(Link)`
@@ -25,13 +32,17 @@ const BackLink = styled(Link)`
   }
 `;
 
-export default function PokemonPageClient({ pokemon }: { pokemon: any }) {
-  const { lang, setLang, t } = useLanguage();
+export default function PokemonPageClient({ pokemon }: { pokemon: PokemonSpecies }) {
+  const { t } = useLanguage();
   if (!pokemon) return <PageContainer>{t.errorLoading}</PageContainer>;
   return (
-    <PageContainer>
-      <BackLink href="/">← {t.back}</BackLink>
-      <PokemonDetail pokemon={pokemon} />
-    </PageContainer>
+    <>
+      <PageHeader>
+        <BackLink href="/">← {t.back}</BackLink>
+      </PageHeader>
+      <PageContainer>
+        <PokemonDetail pokemon={pokemon} />
+      </PageContainer>
+    </>
   );
 }

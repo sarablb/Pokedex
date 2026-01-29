@@ -6,7 +6,6 @@ import { useLanguage } from "@/context/LanguageContext";
 interface HeaderProps {
   onSearch: (query: string) => void;
   onSurpriseMe: () => void;
-  onViewChange: (view: "grid" | "list") => void;
 }
 
 const HeaderContainer = styled.header`
@@ -114,12 +113,12 @@ const SurpriseButton = styled.button`
   transition: background 0.2s ease-in-out;
 
   &:hover {
-    background: ${props => props.theme.colors.charcoal100|| "#060606"}20;
+    background: ${props => props.theme.colors.charcoal100 || "#060606"}20;
   }
 `;
 
 
-export default function Header({ onSearch, onSurpriseMe, onViewChange }: HeaderProps) {
+export default function Header({ onSearch, onSurpriseMe }: HeaderProps) {
   const [query, setQuery] = useState("");
   const { lang, setLang, t } = useLanguage();
 
@@ -131,25 +130,25 @@ export default function Header({ onSearch, onSurpriseMe, onViewChange }: HeaderP
 
   return (
     <HeaderContainer>
-    <TopbarContainer>
-      <TopbarContents>
+      <TopbarContainer>
+        <TopbarContents>
           <Title>Pokedex</Title>
-            <LangWrapper as="nav" aria-label="Language selection">
-              <LangButton 
-                $active={lang === "en"} 
-                onClick={() => setLang("en")}
-                aria-pressed={lang === "en"}
-              >
-                EN
-              </LangButton>
-              <LangButton 
-                $active={lang === "it"} 
-                onClick={() => setLang("it")}
-                aria-pressed={lang === "it"}
-              >
-                IT
-              </LangButton>
-            </LangWrapper>
+          <LangWrapper as="nav" aria-label="Language selection">
+            <LangButton
+              $active={lang === "en"}
+              onClick={() => setLang("en")}
+              aria-pressed={lang === "en"}
+            >
+              EN
+            </LangButton>
+            <LangButton
+              $active={lang === "it"}
+              onClick={() => setLang("it")}
+              aria-pressed={lang === "it"}
+            >
+              IT
+            </LangButton>
+          </LangWrapper>
         </TopbarContents>
       </TopbarContainer>
       <SearchSection>
@@ -165,7 +164,7 @@ export default function Header({ onSearch, onSurpriseMe, onViewChange }: HeaderP
             />
             <span>🔎</span>
           </SearchWrapper>
-          
+
           <SurpriseButton onClick={onSurpriseMe}>
             {t.surprise}
           </SurpriseButton>

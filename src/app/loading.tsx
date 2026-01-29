@@ -36,7 +36,6 @@ const SkeletonCard = styled.div`
 export default function Loading() {
   return (
     <SkeletonGrid>
-      {/* Generiamo 12 card finte per riempire lo schermo */}
       {Array.from({ length: 12 }).map((_, i) => (
         <SkeletonCard key={i} />
       ))}

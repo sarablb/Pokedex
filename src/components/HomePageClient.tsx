@@ -11,7 +11,6 @@ interface HomePageClientProps {
 
 export default function HomePageClient({ pokemons }: HomePageClientProps) {
   const [filtered, setFiltered] = useState(pokemons);
-  const [view, setView] = useState<"grid" | "list">("grid");
 
   const handleSearch = (query: string) => {
     const q = query.toLowerCase();
@@ -27,16 +26,17 @@ export default function HomePageClient({ pokemons }: HomePageClientProps) {
     window.location.href = `/pokemon/${random.name.toLowerCase()}`;
   };
 
-  const handleViewChange = (v: "grid" | "list") => setView(v);
-
   return (
-    <div>
-      <Header
-        onSearch={handleSearch}
-        onSurpriseMe={handleSurpriseMe}
-        onViewChange={handleViewChange}
-      />
-      <PokemonList pokemons={filtered} />
-    </div>
+    <>
+      <header>
+        <Header
+          onSearch={handleSearch}
+          onSurpriseMe={handleSurpriseMe}
+        />
+      </header>
+      <main>
+        <PokemonList pokemons={filtered} />
+      </main>
+    </>
   );
 }

@@ -7,11 +7,15 @@ interface CustomPageProps {
 
 async function getFullPokemonData(nameOrId: string) {
   try {
-    const resDetail = await fetch(`https://pokeapi.co/api/v2/pokemon/${nameOrId}`);
+    const resDetail = await fetch(`https://pokeapi.co/api/v2/pokemon/${nameOrId}`, {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
     if (!resDetail.ok) return null;
     const detailData = await resDetail.json();
 
-    const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${detailData.id}`);
+    const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${detailData.id}`, {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
     if (!resSpecies.ok) return null;
     const speciesData = await resSpecies.json();
 

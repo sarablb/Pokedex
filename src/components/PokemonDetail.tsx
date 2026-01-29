@@ -3,9 +3,9 @@
 import styled from "styled-components";
 import { PokemonSpecies } from "@/lib/types";
 import { TYPE_COLORS } from "@/lib/colors";
-import { getContrastColor } from "@/lib/utils"; 
+import { getContrastColor } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface PokemonDetailProps {
   pokemon: PokemonSpecies;
 }
@@ -90,32 +90,47 @@ const Description = styled.p`
 
 export default function PokemonDetail({ pokemon }: PokemonDetailProps) {
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
-  const types = pokemon.types.map(t => t.type.name);
   const { lang, t } = useLanguage();
+
+  // Get localized type names from PokeAPI or fallback to translations
+  const getLocalizedTypeName = (typeData: any) => {
+    if (!typeData.names) return t.types[typeData.name as keyof typeof t.types] || typeData.name;
+    
+    const langMap = lang === "it" ? "it" : "en";
+    const localizedName = typeData.names.find((n: any) => n.language.name === langMap)?.name;
+    return localizedName || t.types[typeData.name as keyof typeof t.types] || typeData.name;
+  };
 
   return (
     <DetailContainer>
       <BigImageWrapper>
-        <BigPokemonImage 
-          src={imageUrl} 
-          alt={`${pokemon.name} in an attack pose`} 
+        <BigPokemonImage
+          src={imageUrl}
+          alt={`${pokemon.name} in an attack pose`}
         />
       </BigImageWrapper>
 
       <InfoGroup>
         <PokemonId>#{String(pokemon.id).padStart(3, '0')}</PokemonId>
         <PokemonName>{pokemon.name}</PokemonName>
-        <GenusText>{pokemon.genus}</GenusText>
-        
+        <GenusText>
+          {(() => {
+            const apiLang = lang === "it" ? "it" : "en";
+            const genusEntry = pokemon.genera?.find(
+              (g: any) => g.language.name === apiLang
+            );
+            return genusEntry ? genusEntry.genus : "";
+          })()}
+        </GenusText>
         <BadgeGroup>
-          {types.map((type) => {
-            const englishType = type.toLowerCase();
+          {pokemon.types.map((typeSlot: any) => {
+            const englishType = typeSlot.type.name.toLowerCase();
             const bgColor = TYPE_COLORS[englishType] || "#ccc";
-            const translatedType = t.types[englishType as keyof typeof t.types] || type;
+            const translatedType = getLocalizedTypeName(typeSlot.type);
 
             return (
-              <TypeBadge 
-                key={englishType} 
+              <TypeBadge
+                key={englishType}
                 $bgColor={bgColor}
               >
                 {translatedType}
@@ -138,3 +153,5 @@ export default function PokemonDetail({ pokemon }: PokemonDetailProps) {
     </DetailContainer>
   );
 }
+
+/* eslint-enable @typescript-eslint/no-explicit-any */

@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Certamente! Un README professionale è il tuo "biglietto da visita" per i developer di TrueLayer. Deve essere chiaro, tecnico e mettere in risalto le decisioni architettoniche che abbiamo preso (Next.js 15, A11y, Clean Data).
 
-## Getting Started
+Ecco una versione pronta all'uso. Copia e incolla questo contenuto nel tuo file `README.md`.
 
-First, run the development server:
+---
+
+# 🚀 PokéDex Challenge - TrueLayer
+
+A modern, responsive, and fully accessible PokéDex built with **Next.js 15**, **TypeScript**, and **Styled Components**. This project focuses on high-quality UI/UX, multi-language support, and strict accessibility standards.
+
+## 🛠 Tech Stack
+
+* **Framework:** Next.js 15 (App Router)
+* **Language:** TypeScript
+* **Styling:** Styled Components (with Theme support)
+* **State Management:** React Context API (for Localization)
+* **Accessibility Testing:** axe DevTools & axe Accessibility Linter
+
+---
+
+## ✨ Key Features & Technical Solutions
+
+### 1. Advanced Data Fetching (The "PokeAPI Trap")
+
+One of the main challenges of the PokeAPI is that Pokémon data is split between two different endpoints (`/pokemon` and `/pokemon-species`).
+I implemented a server-side data merging strategy to ensure that physical attributes (stats, types) and localized metadata (descriptions, genera, names) are fetched in parallel and unified before reaching the client.
+
+### 2. Multi-Language Support (i18n)
+
+The app features a custom-built localization system using React Context.
+
+* **Dynamic Content:** Not only the UI strings but also the Pokémon descriptions, types, and "genus" (e.g., "Seed Pokémon") change instantly when switching between **English** and **Italian**.
+* **Data Sanitization:** I implemented a regex-based cleaning utility to handle the legacy formatting characters (`\f`, `\n`, `\r`) present in PokeAPI's flavor text entries, ensuring a clean reading experience.
+
+### 3. Accessibility (A11y) first
+
+Following the WCAG guidelines, the project achieves a high accessibility score:
+
+* **Semantic HTML:** Proper use of Landmarks (`<header>`, `<main>`, `<footer>`).
+* **Color Contrast:** A custom utility (`getContrastColor`) dynamically calculates whether to show white or black text on Pokémon type badges based on their background color.
+* **Screen Reader Optimization:** Images include localized descriptive `alt` tags (e.g., "Pikachu in an attack pose").
+* **Keyboard Navigation:** All interactive elements have visible focus states.
+
+### 4. Performance & UX
+
+* **Server Components:** Data fetching is handled on the server to reduce client-side JavaScript.
+* **Responsive Design:** Fully optimized for mobile, tablet, and desktop.
+* **Search & Filters:** Real-time filtering by name or ID.
+
+---
+
+## 🚀 Getting Started
+
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📂 Project Structure
 
-## Learn More
+* `/src/app`: Next.js App Router (Server Components & Metadata)
+* `/src/components`: UI Components (Client Components for interactivity)
+* `/src/context`: Language Context for global i18n state
+* `/src/lib`: API utilities, types, and theme configuration
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Final Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project was developed with a focus on **clean code** and **maintainability**. Every decision, from the folder structure to the choice of Styled Components, was made to ensure the application is scalable and developer-friendly.

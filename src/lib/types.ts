@@ -10,18 +10,28 @@ export interface PokemonListResponse {
   results: PokemonListResult[];
 }
 
+export interface TypeName {
+  name: string;
+  language: { name: string };
+}
+
+export interface PokemonType {
+  name: string;
+  names?: TypeName[];
+}
+
+export interface PokemonTypeSlot {
+  slot: number;
+  type: PokemonType;
+}
+
 export interface PokemonSpecies {
-id: number;
+  id: number;
   name: string;
   genus?: string;
   flavor_text?: string;
   names?: { name: string; language: { name: string } }[];
   genera?: { genus: string; language: { name: string } }[];
   flavor_text_entries?: { flavor_text: string; language: { name: string } }[];
-  types: { type: { name: string } }[];
-}
-
-export interface PokemonTypeSlot {
-  slot: number;
-  type: { name: string };
+  types: PokemonTypeSlot[];
 }

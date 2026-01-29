@@ -19,6 +19,7 @@ const translations = {
     warning: "Attenzione, Allenatore!",
     connectionlost: "Il Team Rocket ha interrotto la comunicazione con il Pokédex.",
     retry: "Riprova",
+    altAttack: "in posa di attacco",
     types: {
       normal: "Normale", fire: "Fuoco", water: "Acqua", grass: "Erba",
       electric: "Elettro", ice: "Ghiaccio", fighting: "Lotta", poison: "Veleno",
@@ -43,6 +44,7 @@ const translations = {
     warning: "Attention, Trainer!",
     connectionlost: "Team Rocket has interrupted communication with the Pokédex.",
     retry: "Retry",
+    altAttack: "in an attack pose",
     types: {
       normal: "Normal", fire: "Fire", water: "Water", grass: "Grass",
       electric: "Electric", ice: "Ice", fighting: "Fighting", poison: "Poison",

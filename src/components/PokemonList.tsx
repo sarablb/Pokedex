@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import styled from "styled-components"; 
+import styled from "styled-components";
 import { PokemonSpecies } from "@/lib/types";
 import PokemonCard from "./PokemonCard";
 import Link from "next/link";
@@ -28,7 +28,7 @@ const ViewToggleGroup = styled.div`
 
 const ToggleButton = styled.button<{ $active: boolean }>`
   /* Se attivo: sfondo nero e testo bianco. Se inattivo: trasparente e testo nero */
-  background: ${props => props.$active ? props.theme.colors.charcoal100 || "#060606": 'transparent'};
+  background: ${props => props.$active ? props.theme.colors.charcoal100 || "#060606" : 'transparent'};
   color: ${props => props.$active ? props.theme.colors.white : props.theme.colors.charcoal100 || "#060606"};
   border: 1px solid ${props => props.theme.colors.charcoal100 || "#060606"};
   border-radius: 8px;
@@ -113,41 +113,41 @@ interface PokemonListProps {
 export default function PokemonList({ pokemons }: PokemonListProps) {
   const [sortBy, setSortBy] = useState<string>("number-asc");
   const [viewMode, setViewMode] = useState<"card" | "list">("card");
-  const { lang, setLang, t } = useLanguage();
-  
+  const { t } = useLanguage();
 
-const sortedPokemons = useMemo(() => {
-  const validPokes = pokemons.filter(p => p !== null && p !== undefined);
-  
-  const pokes = [...validPokes];
 
-  switch (sortBy) {
-    case "number-asc":
-      return pokes.sort((a, b) => a.id - b.id);
-    case "number-desc":
-      return pokes.sort((a, b) => b.id - a.id);
-    case "name-asc":
-      return pokes.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-    case "name-desc":
-      return pokes.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
-    default:
-      return pokes;
-  }
-}, [sortBy, pokemons]);
+  const sortedPokemons = useMemo(() => {
+    const validPokes = pokemons.filter(p => p !== null && p !== undefined);
+
+    const pokes = [...validPokes];
+
+    switch (sortBy) {
+      case "number-asc":
+        return pokes.sort((a, b) => a.id - b.id);
+      case "number-desc":
+        return pokes.sort((a, b) => b.id - a.id);
+      case "name-asc":
+        return pokes.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      case "name-desc":
+        return pokes.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
+      default:
+        return pokes;
+    }
+  }, [sortBy, pokemons]);
 
   return (
     <div>
       <ControlsRow>
         <ViewToggleGroup>
-          <ToggleButton 
-            $active={viewMode === "card"} 
+          <ToggleButton
+            $active={viewMode === "card"}
             onClick={() => setViewMode("card")}
             title={t.gridview}
           >
             <GridIcon />
           </ToggleButton>
-          <ToggleButton 
-            $active={viewMode === "list"} 
+          <ToggleButton
+            $active={viewMode === "list"}
             onClick={() => setViewMode("list")}
             title={t.listview}
           >
@@ -174,7 +174,7 @@ const sortedPokemons = useMemo(() => {
                 name={pokemon.name}
                 id={pokemon.id}
                 image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
-                types={pokemon.types.map(t => t.type.name)}
+                types={pokemon.types}
                 listView={viewMode === "list"}
               />
             </Link>

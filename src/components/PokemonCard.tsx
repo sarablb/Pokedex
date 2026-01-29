@@ -2,20 +2,23 @@
 
 import styled from "styled-components";
 import { TYPE_COLORS } from "@/lib/colors";
-import { getContrastColor } from "@/lib/utils"; 
-import { motion } from "framer-motion"; 
+import { getContrastColor } from "@/lib/utils";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import { PokemonTypeSlot } from "@/lib/types";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface PokemonCardProps {
   name: string;
   id: number;
   image: string;
-  types: string[];
-  listView?: boolean; 
+  types: (PokemonTypeSlot | { type: { name: string } })[];
+  listView?: boolean;
 }
 
-const CardContainer = styled(motion.div)<{ $isList: boolean }>`
+const CardContainer = styled(motion.div) <{ $isList: boolean }>`
   display: flex;
   flex-direction: ${props => (props.$isList ? "row" : "column")};
   align-items: top;
@@ -81,29 +84,55 @@ const TypeBadge = styled.span<{ $bgColor: string }>`
 `;
 
 export default function PokemonCard({ name, id, image, types, listView = false }: PokemonCardProps) {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+
+  // Get localized type names from PokeAPI or fallback to translations
+  const getLocalizedTypeName = (typeData: any): string => {
+    // Extract the actual type object if it's wrapped in { slot, type }
+    const typeObj: any = typeData.type || typeData;
+
+    // Handle string types
+    if (typeof typeObj === 'string') {
+      return t.types[typeObj.toLowerCase() as keyof typeof t.types] || typeObj;
+    }
+
+    // If it's an object with names from PokeAPI
+    if (typeObj.names && Array.isArray(typeObj.names)) {
+      const langMap = lang === "it" ? "it" : "en";
+      const localizedName = typeObj.names.find((n: any) => n.language?.name === langMap)?.name;
+      return localizedName || t.types[typeObj.name?.toLowerCase() as keyof typeof t.types] || typeObj.name;
+    }
+
+    // Fallback - safely handle non-string names
+    const name = typeObj.name || typeObj;
+    if (typeof name === 'string') {
+      return t.types[name.toLowerCase() as keyof typeof t.types] || name;
+    }
+    return String(name);
+  };
+
   return (
-    <CardContainer 
+    <CardContainer
       $isList={listView}
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ 
-        scale: 1.03, 
+      whileHover={{
+        scale: 1.03,
         boxShadow: "0 10px 20px rgba(0,0,0,0.08)",
-        backgroundColor: "#f9f9f9" 
+        backgroundColor: "#f9f9f9"
       }}
       whileTap={{ scale: 0.97 }}
       transition={{ duration: 0.3 }}
     >
       <ImageWrapper $isList={listView}>
-        <Image 
-          src={image} 
-          alt={name}
+        <Image
+          src={image}
+          alt={`${name} ${t.altAttack}`}
           width={listView ? 80 : 150}
           height={listView ? 80 : 150}
           style={{ objectFit: 'contain' }}
-          priority={id <= 10} 
+          priority={id <= 10}
         />
       </ImageWrapper>
 
@@ -111,14 +140,16 @@ export default function PokemonCard({ name, id, image, types, listView = false }
         <PokemonId>#{String(id).padStart(3, '0')}</PokemonId>
         <PokemonName>{name}</PokemonName>
         <BadgeGroup $isList={listView}>
-          {types.map((type) => {
-            const englishType = type.toLowerCase();
+          {types.map((typeData: any) => {
+            // Handle both string and object types
+            const typeName = typeData.type?.name;
+            const englishType = typeName.toLowerCase();
             const bgColor = TYPE_COLORS[englishType] || "#ccc";
-            const translatedType = t.types[englishType as keyof typeof t.types] || type;
+            const translatedType = getLocalizedTypeName(typeData);
 
             return (
-              <TypeBadge 
-                key={englishType} 
+              <TypeBadge
+                key={englishType}
                 $bgColor={bgColor}
               >
                 {translatedType}
@@ -130,3 +161,5 @@ export default function PokemonCard({ name, id, image, types, listView = false }
     </CardContainer>
   );
 }
+
+/* eslint-enable @typescript-eslint/no-explicit-any */
