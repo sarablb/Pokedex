@@ -1,8 +1,3 @@
-Certamente! Un README professionale è il tuo "biglietto da visita" per i developer di TrueLayer. Deve essere chiaro, tecnico e mettere in risalto le decisioni architettoniche che abbiamo preso (Next.js 15, A11y, Clean Data).
-
-Ecco una versione pronta all'uso. Copia e incolla questo contenuto nel tuo file `README.md`.
-
----
 
 # 🚀 PokéDex Challenge - TrueLayer
 
