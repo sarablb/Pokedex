@@ -1,4 +1,3 @@
-// Risposta della lista base della PokeAPI
 export interface PokemonListResult {
   name: string;
   url: string;
@@ -12,11 +11,14 @@ export interface PokemonListResponse {
 }
 
 export interface PokemonSpecies {
-  id: number;
+id: number;
   name: string;
-  types: PokemonTypeSlot[];
-  genus: string;
-  flavor_text: string;
+  genus?: string;
+  flavor_text?: string;
+  names?: { name: string; language: { name: string } }[];
+  genera?: { genus: string; language: { name: string } }[];
+  flavor_text_entries?: { flavor_text: string; language: { name: string } }[];
+  types: { type: { name: string } }[];
 }
 
 export interface PokemonTypeSlot {

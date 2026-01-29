@@ -27,6 +27,7 @@ const BackLink = styled(Link)`
 
 export default function PokemonPageClient({ pokemon }: { pokemon: any }) {
   const { lang, setLang, t } = useLanguage();
+  if (!pokemon) return <PageContainer>{t.errorLoading}</PageContainer>;
   return (
     <PageContainer>
       <BackLink href="/">← {t.back}</BackLink>

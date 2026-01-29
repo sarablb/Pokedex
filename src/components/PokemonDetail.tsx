@@ -88,12 +88,10 @@ const Description = styled.p`
   margin-top: 20px;
 `;
 
-// --- Component ---
-
 export default function PokemonDetail({ pokemon }: PokemonDetailProps) {
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
   const types = pokemon.types.map(t => t.type.name);
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
 
   return (
     <DetailContainer>
@@ -128,7 +126,14 @@ export default function PokemonDetail({ pokemon }: PokemonDetailProps) {
       </InfoGroup>
 
       <Description>
-        {pokemon.flavor_text}
+        {(() => {
+          const apiLang = lang === "it" ? "it" : "en";
+          const flavorEntry = pokemon.flavor_text_entries?.find(
+            (entry: any) => entry.language.name === apiLang
+          );
+          const textToClean = flavorEntry ? flavorEntry.flavor_text : pokemon.flavor_text;
+          return textToClean?.replace(/[\f\n\t\r]/g, " ");
+        })()}
       </Description>
     </DetailContainer>
   );

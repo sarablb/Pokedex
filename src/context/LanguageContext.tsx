@@ -15,6 +15,10 @@ const translations = {
     nameasc: "Nome A → Z",
     namedesc: "Nome Z → A",
     back: "Torna alla lista",
+    errorLoading: "Errore nel caricamento del Pokémon",
+    warning: "Attenzione, Allenatore!",
+    connectionlost: "Il Team Rocket ha interrotto la comunicazione con il Pokédex.",
+    retry: "Riprova",
     types: {
       normal: "Normale", fire: "Fuoco", water: "Acqua", grass: "Erba",
       electric: "Elettro", ice: "Ghiaccio", fighting: "Lotta", poison: "Veleno",
@@ -35,6 +39,10 @@ const translations = {
     nameasc: "Name A → Z",
     namedesc: "Name Z → A",
     back: "Back to list",
+    errorLoading: "Error loading Pokémon",
+    warning: "Attention, Trainer!",
+    connectionlost: "Team Rocket has interrupted communication with the Pokédex.",
+    retry: "Retry",
     types: {
       normal: "Normal", fire: "Fire", water: "Water", grass: "Grass",
       electric: "Electric", ice: "Ice", fighting: "Fighting", poison: "Poison",
@@ -67,6 +75,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (!context) throw new Error("useLanguage deve essere usato dentro LanguageProvider");
+  if (!context) {
+    throw new Error("useLanguage must be used within a LanguageProvider");
+  }
   return context;
 }

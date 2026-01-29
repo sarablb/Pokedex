@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import styled from "styled-components";
+import { useLanguage } from "@/context/LanguageContext";
+
 
 const ErrorContainer = styled.div`
   display: flex;
@@ -25,6 +27,7 @@ const RetryButton = styled.button`
 `;
 
 export default function Error({
+
   error,
   reset,
 }: {
@@ -32,16 +35,15 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Logga l'errore su un servizio di monitoraggio (opzionale per il test)
     console.error(error);
   }, [error]);
-
+  const { t } = useLanguage();
   return (
     <ErrorContainer>
-      <h2>Attenzione, Allenatore!</h2>
-      <p>Il Team Rocket ha interrotto la comunicazione con il Pokédex.</p>
+      <h2>{t.warning}</h2>
+      <p>{t.connectionlost}</p>
       <p style={{ color: "#666", fontSize: "0.9rem" }}>{error.message}</p>
-      <RetryButton onClick={() => reset()}>Riprova</RetryButton>
+      <RetryButton onClick={() => reset()}>{t.retry}</RetryButton>
     </ErrorContainer>
   );
 }

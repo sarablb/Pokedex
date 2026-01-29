@@ -1,20 +1,34 @@
-import { getPokemonSpecies } from "@/lib/api";
 import PokemonPageClient from "@/components/PokemonPageClient";
+import { notFound } from "next/navigation";
 
-interface PageProps {
-  params: Promise<{ name?: string }>;
+interface CustomPageProps {
+  params: Promise<{ name: string }>;
 }
 
-export default async function PokemonPage({ params }: PageProps) {
+async function getFullPokemonData(nameOrId: string) {
+  try {
+    const resDetail = await fetch(`https://pokeapi.co/api/v2/pokemon/${nameOrId}`);
+    if (!resDetail.ok) return null;
+    const detailData = await resDetail.json();
+
+    const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${detailData.id}`);
+    if (!resSpecies.ok) return null;
+    const speciesData = await resSpecies.json();
+
+    return { ...detailData, ...speciesData };
+  } catch {
+    return null;
+  }
+}
+
+export default async function PokemonPage({ params }: CustomPageProps) {
   const { name } = await params;
 
-  if (!name) return <div>Name not provided</div>;
+  if (!name) return notFound();
 
-  try {
-    const pokemon = await getPokemonSpecies(name);
+  const pokemon = await getFullPokemonData(name.toLowerCase());
 
-    return <PokemonPageClient pokemon={pokemon} />;
-  } catch (err) {
-    return <div>Error loading Pokemon: {name}</div>;
-  }
+  if (!pokemon) return notFound();
+
+  return <PokemonPageClient pokemon={pokemon} />;
 }
