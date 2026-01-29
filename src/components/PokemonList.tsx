@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import styled from "styled-components"; // 1. Importa styled
+import styled from "styled-components"; 
 import { PokemonSpecies } from "@/lib/types";
 import PokemonCard from "./PokemonCard";
 import Link from "next/link";
-
-// --- 2. INCOLLA QUI TUTTI GLI STILI (Sotto gli import, sopra il componente) ---
+import { useLanguage } from "@/context/LanguageContext";
 
 const ControlsRow = styled.div`
   max-width: 1200px;
@@ -106,7 +105,6 @@ const ListIcon = () => (
   </svg>
 );
 
-// --- 3. IL TUO COMPONENTE (Sotto gli stili) ---
 
 interface PokemonListProps {
   pokemons: PokemonSpecies[];
@@ -115,9 +113,10 @@ interface PokemonListProps {
 export default function PokemonList({ pokemons }: PokemonListProps) {
   const [sortBy, setSortBy] = useState<string>("number-asc");
   const [viewMode, setViewMode] = useState<"card" | "list">("card");
+  const { lang, setLang, t } = useLanguage();
+  
 
 const sortedPokemons = useMemo(() => {
-  // 1. Filtriamo subito i null o undefined per sicurezza
   const validPokes = pokemons.filter(p => p !== null && p !== undefined);
   
   const pokes = [...validPokes];
@@ -143,26 +142,26 @@ const sortedPokemons = useMemo(() => {
           <ToggleButton 
             $active={viewMode === "card"} 
             onClick={() => setViewMode("card")}
-            title="Grid View"
+            title={t.gridview}
           >
             <GridIcon />
           </ToggleButton>
           <ToggleButton 
             $active={viewMode === "list"} 
             onClick={() => setViewMode("list")}
-            title="List View"
+            title={t.listview}
           >
             <ListIcon />
           </ToggleButton>
         </ViewToggleGroup>
 
         <SelectContainer>
-          <label htmlFor="sortBy">Sort by:</label>
+          <label htmlFor="sortBy">{t.sortby}:</label>
           <StyledSelect id="sortBy" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="number-asc">Lowest number (first)</option>
-            <option value="number-desc">Highest number (first)</option>
-            <option value="name-asc">Name A → Z</option>
-            <option value="name-desc">Name Z → A</option>
+            <option value="number-asc">{t.lowestfirst}</option>
+            <option value="number-desc">{t.highestfirst}</option>
+            <option value="name-asc">{t.nameasc}</option>
+            <option value="name-desc">{t.namedesc}</option>
           </StyledSelect>
         </SelectContainer>
       </ControlsRow>

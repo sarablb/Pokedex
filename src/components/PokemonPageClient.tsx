@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import Link from "next/link";
 import PokemonDetail from "./PokemonDetail";
+import { useLanguage } from "@/context/LanguageContext";
 
 const PageContainer = styled.main`
   max-width: 1200px;
@@ -25,9 +26,10 @@ const BackLink = styled(Link)`
 `;
 
 export default function PokemonPageClient({ pokemon }: { pokemon: any }) {
+  const { lang, setLang, t } = useLanguage();
   return (
     <PageContainer>
-      <BackLink href="/">← Back to list</BackLink>
+      <BackLink href="/">← {t.back}</BackLink>
       <PokemonDetail pokemon={pokemon} />
     </PageContainer>
   );
