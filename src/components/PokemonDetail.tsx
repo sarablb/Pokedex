@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { PokemonSpecies } from "@/lib/types";
 import { TYPE_COLORS } from "@/lib/colors";
 import { getContrastColor } from "@/lib/utils"; 
+import { useLanguage } from "@/context/LanguageContext";
 
 interface PokemonDetailProps {
   pokemon: PokemonSpecies;
@@ -92,6 +93,7 @@ const Description = styled.p`
 export default function PokemonDetail({ pokemon }: PokemonDetailProps) {
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
   const types = pokemon.types.map(t => t.type.name);
+  const { t } = useLanguage();
 
   return (
     <DetailContainer>
@@ -108,14 +110,20 @@ export default function PokemonDetail({ pokemon }: PokemonDetailProps) {
         <GenusText>{pokemon.genus}</GenusText>
         
         <BadgeGroup>
-          {types.map((type) => (
-            <TypeBadge 
-              key={type} 
-              $bgColor={TYPE_COLORS[type.toLowerCase()] || "#ccc"}
-            >
-              {type}
-            </TypeBadge>
-          ))}
+          {types.map((type) => {
+            const englishType = type.toLowerCase();
+            const bgColor = TYPE_COLORS[englishType] || "#ccc";
+            const translatedType = t.types[englishType as keyof typeof t.types] || type;
+
+            return (
+              <TypeBadge 
+                key={englishType} 
+                $bgColor={bgColor}
+              >
+                {translatedType}
+              </TypeBadge>
+            );
+          })}
         </BadgeGroup>
       </InfoGroup>
 

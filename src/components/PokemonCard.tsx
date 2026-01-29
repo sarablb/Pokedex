@@ -5,6 +5,7 @@ import { TYPE_COLORS } from "@/lib/colors";
 import { getContrastColor } from "@/lib/utils"; 
 import { motion } from "framer-motion"; 
 import Image from "next/image";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface PokemonCardProps {
   name: string;
@@ -80,6 +81,7 @@ const TypeBadge = styled.span<{ $bgColor: string }>`
 `;
 
 export default function PokemonCard({ name, id, image, types, listView = false }: PokemonCardProps) {
+  const { t } = useLanguage();
   return (
     <CardContainer 
       $isList={listView}
@@ -109,14 +111,20 @@ export default function PokemonCard({ name, id, image, types, listView = false }
         <PokemonId>#{String(id).padStart(3, '0')}</PokemonId>
         <PokemonName>{name}</PokemonName>
         <BadgeGroup $isList={listView}>
-          {types.map((type) => (
-            <TypeBadge 
-              key={type} 
-              $bgColor={TYPE_COLORS[type.toLowerCase()] || "#ccc"}
-            >
-              {type}
-            </TypeBadge>
-          ))}
+          {types.map((type) => {
+            const englishType = type.toLowerCase();
+            const bgColor = TYPE_COLORS[englishType] || "#ccc";
+            const translatedType = t.types[englishType as keyof typeof t.types] || type;
+
+            return (
+              <TypeBadge 
+                key={englishType} 
+                $bgColor={bgColor}
+              >
+                {translatedType}
+              </TypeBadge>
+            );
+          })}
         </BadgeGroup>
       </InfoWrapper>
     </CardContainer>
