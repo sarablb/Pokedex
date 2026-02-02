@@ -3,7 +3,7 @@
 
 ## 👾 Online DEMO
 
-https://pokequery.netlify.app/
+https://pokedex-psi-olive.vercel.app/
 
 Have fun!
 
